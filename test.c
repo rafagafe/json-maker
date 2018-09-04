@@ -116,6 +116,11 @@ static int empty( void ) {
     done();
 }
 
+#ifndef LONG_LONG_MAX
+#define LONG_LONG_MAX LLONG_MAX
+#define LONG_LONG_MIN LLONG_MIN
+#endif
+
 static int primitive( void ) {
     char buff[512];
     char* p = json_objOpen( buff, NULL );
