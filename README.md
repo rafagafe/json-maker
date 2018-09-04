@@ -81,8 +81,8 @@ struct measure {
   * @param dest Destination memory block.
   * @param src Source structure.
   * @return The length of the null-terminated string in dest. */
-char* measure_to_json( char* dest, char const* name, struct measure const* measure ) {
-    char* p = json_objOpen( dest, name );
+char* measure_to_json( char* dest, struct measure const* measure ) {
+    char* p = json_objOpen( dest, NULL );
     p = json_weather( p, "weather", &measure->weather );
     p = json_time( p, "time", &measure->time );
     p = json_objClose( p );
