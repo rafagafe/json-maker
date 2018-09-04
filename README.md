@@ -5,11 +5,11 @@ JSON Maker is a C library used to code JSON objects in null-terminated strings.
 Surely the most effective method to create simple JSON objects is to use sprintf. But when you need to reuse code, nest objects or include arrays you can fall into the formatted-strings hell.
 
 * Backslash escapes are automatically added. Only in the fields of type string.
-* By means of compilation options, the use of print can not be avoided. This is very useful in embedded systems with memory constraint.
+* By means of compilation options, the use of print can be avoided. This is very useful in embedded systems with memory constraint.
 
 # Philosophy
 
-To form JSON objects in strings of characters are called sequences of functions that concatenate sub-strings. Each substring includes a field of the JSON object, key-value. To add fields of the type object or array you need to invoke two functions, one to open and another to close.
+To form JSON objects in strings of characters are invoked sequences of functions that concatenate sub-strings. Each substring includes a field of the JSON object, key-value. To add fields of the type object or array you need to invoke two functions, one to open and another to close.
 
 ```C
 
@@ -34,6 +34,8 @@ int weather_to_json( char* dest, struct weather const* src ) {
     
 ```
 
+The complexity of these sequences of concatenations is kept in O(n) thanks to the fluid interface of JSON Maker.
+
 It is very easy to extend the library by creating methods to convert C structures into JSON fields of object type. As with the arrays.
 
 ```C
@@ -46,6 +48,7 @@ struct weather {
 /* Add a time object property in a JSON string.
   "name":{"temp":-5,"hum":48}, */
 char* json_weather( char* dest, char const* name, struct weather const* weather ) {
+    // dest always points to the null character
     dest = json_objOpen( dest, name );              // --> "name":{\0
     dest = json_int( dest, "temp", weather->temp ); // --> "name":{"temp":22,\0
     dest = json_int( dest, "hum", weather->hum );   // --> "name":{"temp":22,"hum":45,\0
