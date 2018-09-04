@@ -1,5 +1,7 @@
 # JSON Maker
 
+[![Build Status](https://travis-ci.org/rafagafe/json-maker.svg?branch=master)](https://travis-ci.org/rafagafe/json-maker)
+
 JSON Maker is a C library used to code JSON objects in null-terminated strings.
 
 Surely the most effective method to create simple JSON objects is to use sprintf. But when you need to reuse code, nest objects or include arrays you can fall into the formatted-strings hell.
