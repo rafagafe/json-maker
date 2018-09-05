@@ -246,12 +246,14 @@ static int real( void ) {
     p = json_objClose( p );
     p = json_end( p );
 #ifdef NO_SPRINTF
-    static char const rslt[] = "{\"data\":[0,0,5000000]}";
+    static char const rslt1[] = "{\"data\":[0,0,5000000]}";
+    static char const rslt2[] = "{\"data\":[0,0,5000000]}";
 #else
-    static char const rslt[] = "{\"data\":[0.2,2e-006,5e+006]}";
+    static char const rslt1[] = "{\"data\":[0.2,2e-006,5e+006]}";
+    static char const rslt2[] = "{\"data\":[0.2,2e-06,5e+06]}";
 #endif
-    check( p - buff == sizeof rslt - 1 );
-    check( 0 == strcmp( buff, rslt ) );
+    check( p - buff == sizeof rslt1 - 1 || p - buff == sizeof rslt2 - 1 );
+    check( 0 == strcmp( buff, rslt1 ) ||  0 == strcmp( buff, rslt2 ) );
     done();
 }
 
