@@ -31,7 +31,6 @@
 #include <string.h>
 #include <stdint.h>
 #include <limits.h>
-#include <inttypes.h>
 #include "json-maker.h"
 
 // ----------------------------------------------------- Test "framework": ---
@@ -213,7 +212,7 @@ static int integers( void ) {
         p = json_objClose( p );
         p = json_end( p );
         char rslt[ sizeof buff ];
-        int len = sprintf( rslt, "{\"max\":%"PRId64",\"min\":%I64d}", LONG_LONG_MAX, LONG_LONG_MIN );
+        int len = sprintf( rslt, "{\"max\":%lld,\"min\":%lld}", LONG_LONG_MAX, LONG_LONG_MIN );
         check( len < sizeof buff );
         check( p - buff == len );
         check( 0 == strcmp( buff, rslt ) );

@@ -251,15 +251,14 @@ char* json_double( char* dest, char const* name, double value ) {
 #else
 
 #include <stdio.h>
-#include <inttypes.h>
 
 #define ALL_TYPES \
-    X( json_int,      int,           "%d"      ) \
-    X( json_long,     long,          "%ld"     ) \
-    X( json_uint,     unsigned int,  "%u"      ) \
-    X( json_ulong,    unsigned long, "%lu"     ) \
-    X( json_verylong, long long,     "%"PRId64 ) \
-    X( json_double,   double,        "%lg"     ) \
+    X( json_int,      int,           "%d"   ) \
+    X( json_long,     long,          "%ld"  ) \
+    X( json_uint,     unsigned int,  "%u"   ) \
+    X( json_ulong,    unsigned long, "%lu"  ) \
+    X( json_verylong, long long,     "%lld" ) \
+    X( json_double,   double,        "%g"   ) \
 
 
 #define json_num( funcname, type, fmt )                         \
