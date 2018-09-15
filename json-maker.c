@@ -100,7 +100,7 @@ static char* strname( char* dest, char const* name ) {
 
 /** Get the hexadecimal digit of the least significant nibble of a integer. */
 static int nibbletoch( int nibble ) {
-    return "0123456789ABCDEF"[ nibble % 16 ];
+    return "0123456789ABCDEF"[ nibble % 16u ];
 }
 
 /** Get the escape character of a non-printable.
