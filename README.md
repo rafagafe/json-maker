@@ -9,6 +9,8 @@ Surely the most effective method to create simple JSON objects is to use sprintf
 * Backslash escapes are automatically added. Only in the fields of type string.
 * By means of compilation options, the use of print can be avoided. This is very useful in embedded systems with memory constraint.
 
+If you need a JSON parser please visit: https://github.com/rafagafe/tiny-json
+
 # Philosophy
 
 To form JSON objects in strings of characters are invoked sequences of functions that concatenate sub-strings. Each substring includes a field of the JSON object, key-value. To add fields of the type object or array you need to invoke two functions, one to open and another to close.
