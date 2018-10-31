@@ -38,7 +38,7 @@ int weather_to_json( char* dest, struct weather const* src ) {
     
 ```
 
-The complexity of these sequences of concatenations is kept in O(n) thanks to the fluid interface of JSON Maker.
+The complexity of these sequences of concatenations is kept in O(n) thanks to the fluent interface of JSON Maker.
 
 It is very easy to extend the library by creating methods to convert C structures into JSON fields of object type. As with the arrays.
 
