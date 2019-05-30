@@ -72,7 +72,20 @@ static int escape( void ) {
     p = json_str( p, "name", "\tHello: \"man\"\n" );
     p = json_objClose( p );
     p = json_end( p );
+    printf( "\n\n%s\n\n", buff );
     static char const rslt[] = "{\"name\":\"\\tHello: \\\"man\\\"\\n\"}";
+    check( p - buff == sizeof rslt - 1 );
+    check( 0 == strcmp( buff, rslt ) );
+    done();
+}
+
+static int len( void ) {
+    char buff[512];
+    char* p = json_objOpen( buff, NULL );
+    p = json_nstr( p, "name", "\tHello: \"man\"\n", 6 );
+    p = json_objClose( p );
+    p = json_end( p );
+    static char const rslt[] = "{\"name\":\"\\tHello\"}";
     check( p - buff == sizeof rslt - 1 );
     check( 0 == strcmp( buff, rslt ) );
     done();
@@ -262,6 +275,7 @@ static int real( void ) {
 int main( void ) {
     static struct test const tests[] = {
         { escape,    "Escape characters"        },
+        { len,       "Non-null-terminated"      },
         { empty,     "Empty objects and arrays" },
         { primitive, "Primitives values"        },
         { integers,  "Integers values"          },

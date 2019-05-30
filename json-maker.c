@@ -120,22 +120,23 @@ static int escape( int ch ) {
 /** Copy a null-terminated string inserting escape characters if needed.
   * @param dest Destination memory block.
   * @param src Source string.
+  * @param len Max length of source. < 0 for unlimit.
   * @return Pointer to the null character of the destination string. */
-static char* atoesc( char* dest, char const* src ) {
-    for( ; *src != '\0'; ++dest, ++src ) {
-        if ( *src >= ' ' && *src != '\"' && *src != '\\' && *src != '/' )
-            *dest = *src;
+static char* atoesc( char* dest, char const* src, int len ) {
+    for( int i = 0; src[i] != '\0' && ( i < len || 0 > len ); ++dest, ++i ) {
+        if ( src[i] >= ' ' && src[i] != '\"' && src[i] != '\\' && src[i] != '/' )
+            *dest = src[i];
         else {
             *dest++ = '\\';
-            int const esc = escape( *src );
+            int const esc = escape( src[i] );
             if ( esc )
                 *dest = esc;
             else {
                 *dest++ = 'u';
                 *dest++ = '0';
                 *dest++ = '0';
-                *dest++ = nibbletoch( *src / 16 );
-                *dest++ = nibbletoch( *src );
+                *dest++ = nibbletoch( src[i] / 16 );
+                *dest++ = nibbletoch( src[i] );
             }
         }
     }
@@ -144,9 +145,9 @@ static char* atoesc( char* dest, char const* src ) {
 }
 
 /* Add a text property in a JSON string. */
-char* json_str( char* dest, char const* name, char const* value ) {
+char* json_nstr( char* dest, char const* name, char const* value, int len ) {
     dest = strname( dest, name );
-    dest = atoesc( dest, value );
+    dest = atoesc( dest, value, len );
     dest = atoa( dest, "\"," );
     return dest;
 }

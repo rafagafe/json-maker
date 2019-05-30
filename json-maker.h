@@ -59,6 +59,14 @@ char* json_arrOpen( char* dest, char const* name );
   * @param dest Pointer to the end of JSON under construction.
   * @return Pointer to the new end of JSON under construction. */
 char* json_arrClose( char* dest );
+/** Add a text property in a JSON string.
+  * @param dest Pointer to the end of JSON under construction.
+  * @param name Pointer to null-terminated string or null for unnamed.
+  * @param value A valid null-terminated string with the value.
+  *              Backslash escapes will be added for special characters.
+  * @param len Max length of value. < 0 for unlimit.  
+  * @return Pointer to the new end of JSON under construction. */  
+char* json_nstr( char* dest, char const* name, char const* value, int len );
 
 /** Add a text property in a JSON string.
   * @param dest Pointer to the end of JSON under construction.
@@ -66,7 +74,9 @@ char* json_arrClose( char* dest );
   * @param value A valid null-terminated string with the value.
   *              Backslash escapes will be added for special characters.
   * @return Pointer to the new end of JSON under construction. */
-char* json_str( char* dest, char const* name, char const* value );
+static inline char* json_str( char* dest, char const* name, char const* value ) {
+    return json_nstr( dest, name, value, -1 );  
+}
 
 /** Add a boolean property in a JSON string.
   * @param dest Pointer to the end of JSON under construction.
