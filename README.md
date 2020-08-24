@@ -32,7 +32,7 @@ int weather_to_json( char* dest, struct weather const* src ) {
     p = json_int( p, "temp", src->temp ); // --> {"temp":22,\0
     p = json_int( p, "hum", src->hum );   // --> {"temp":22,"hum":45,\0
     p = json_objClose( p );               // --> {"temp":22,"hum":45},\0
-    p = json_finish( p );                 // --> {"temp":22,"hum":45}\0
+    p = json_end( p );                 // --> {"temp":22,"hum":45}\0
     return p - dest;       
 }
     
@@ -90,7 +90,7 @@ int measure_to_json( char* dest, struct measure const* measure ) {
     p = json_weather( p, "weather", &measure->weather );
     p = json_time( p, "time", &measure->time );
     p = json_objClose( p );
-    p = json_finish( p );
+    p = json_end( p );
     return p - dest;
 }
 
