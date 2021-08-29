@@ -107,11 +107,12 @@ static int nibbletoch( int nibble ) {
   * @param ch Character source.
   * @return The escape character or null character if error. */
 static int escape( int ch ) {
+    int i;
     static struct { char code; char ch; } const pair[] = {
         { '\"', '\"' }, { '\\', '\\' }, { '/',  '/'  }, { 'b',  '\b' },
         { 'f',  '\f' }, { 'n',  '\n' }, { 'r',  '\r' }, { 't',  '\t' },
     };
-    for( int i = 0; i < sizeof pair / sizeof *pair; ++i )
+    for( i = 0; i < sizeof pair / sizeof *pair; ++i )
         if ( ch == pair[i].ch )
             return pair[i].code;
     return '\0';
@@ -123,7 +124,8 @@ static int escape( int ch ) {
   * @param len Max length of source. < 0 for unlimit.
   * @return Pointer to the null character of the destination string. */
 static char* atoesc( char* dest, char const* src, int len ) {
-    for( int i = 0; src[i] != '\0' && ( i < len || 0 > len ); ++dest, ++i ) {
+    int i;
+    for( i = 0; src[i] != '\0' && ( i < len || 0 > len ); ++dest, ++i ) {
         if ( src[i] >= ' ' && src[i] != '\"' && src[i] != '\\' && src[i] != '/' )
             *dest = src[i];
         else {
