@@ -7,4 +7,9 @@ project(json-maker
         LANGUAGES C
         )
 
+set(CMAKE_COLOR_MAKEFILE  ON CACHE BOOL "ON" FORCE)
+set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT)
+
+add_compile_options(-std=c99 -Wall -pedantic)
+
 add_subdirectory(src)

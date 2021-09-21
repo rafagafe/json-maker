@@ -8,7 +8,6 @@ git:
   depth: 3
 language: c
 os: freebsd
-sudo: false
 
 env:
   - BUILDTYPE=RELEASE
