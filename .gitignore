@@ -1,0 +1,5 @@
+cmake-build-*
+TODO.txt
+.idea
+**.swp
+**.orig

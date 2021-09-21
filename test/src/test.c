@@ -31,7 +31,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <limits.h>
-#include "json-maker.h"
+#include "json-maker/json-maker.h"
 
 // ----------------------------------------------------- Test "framework": ---
 
