@@ -9,6 +9,11 @@ project(json-maker
 
 set(CMAKE_COLOR_MAKEFILE  ON CACHE BOOL "ON" FORCE)
 set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/static)
+set(CMAKE_DEBUG_POSTFIX "-d")
+
 option(BUILD_SAMPLES "Will add sample apps to the build process." OFF)
 
 add_compile_options(-std=c99 -Wall -pedantic)
