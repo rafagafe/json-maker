@@ -13,3 +13,4 @@ set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT)
 add_compile_options(-std=c99 -Wall -pedantic)
 
 add_subdirectory(src)
+add_subdirectory(test)
