@@ -1,5 +1,6 @@
-ranches:
-  only: feature/cmake_project
+branches:
+  only:
+    - feature/cmake_project
 compiler:
   - gcc
   - clang
@@ -9,8 +10,9 @@ language: c
 os: freebsd
 sudo: false
 
-env: BUILDTYPE=RELEASE
-     BUILDTYPE=DEBUG
+env:
+  - BUILDTYPE=RELEASE
+  - BUILDTYPE=DEBUG
 script:
   - "mkdir -p build/$BUILDTYPE"
   - "cd build/$BUILDTYPE"
