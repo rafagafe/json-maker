@@ -1,4 +1,19 @@
+ranches:
+  only: feature/cmake_project
+compiler:
+  - gcc
+  - clang
+git:
+  depth: 3
 language: c
+os: freebsd
 sudo: false
+
+env: BUILDTYPE=RELEASE
+     BUILDTYPE=DEBUG
 script:
-  - make test
+  - "mkdir -p build/$BUILDTYPE"
+  - "cd build/$BUILDTYPE"
+  - "cmake --configure -DCMAKE_BUILD_TYPE=$BUILDTYPE ../../"
+  - "cmake --build ."
+
