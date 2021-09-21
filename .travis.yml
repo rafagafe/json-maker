@@ -17,6 +17,6 @@ script:
   - "cd build/$BUILDTYPE"
   - "cmake --configure -DCMAKE_BUILD_TYPE=$BUILDTYPE ../../"
   - "cmake --build ."
-  - "cd test"
+  - "cd tests"
   - "ctest ."
 

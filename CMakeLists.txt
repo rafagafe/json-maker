@@ -9,8 +9,12 @@ project(json-maker
 
 set(CMAKE_COLOR_MAKEFILE  ON CACHE BOOL "ON" FORCE)
 set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT)
+option(BUILD_SAMPLES "Will add sample apps to the build process." OFF)
 
 add_compile_options(-std=c99 -Wall -pedantic)
 
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(tests)
+if(BUILD_SAMPLES)
+    add_subdirectory(samples)
+endif() #BUILD_SAMPLES
