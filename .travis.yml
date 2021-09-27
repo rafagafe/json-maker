@@ -1,9 +1,5 @@
-branches:
-  only:
-    - feature/cmake_project
 compiler:
   - gcc
-  - clang
 git:
   depth: 3
 language: c
