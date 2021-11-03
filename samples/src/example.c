@@ -25,7 +25,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "json-maker.h"
+#include "json-maker/json-maker.h"
 
 struct weather {
     int temp;
