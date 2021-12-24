@@ -146,9 +146,10 @@ static char* atoesc( char* dest, char const* src, int len, size_t* remLen  ) {
                 *dest++ = '\\';
                 --*remLen;
                 int const esc = escape( src[i] );
-                if ( esc )
-                    *dest = esc;
-                else {
+                if ( esc ) {
+                    if (*remLen != 0)
+                        *dest = esc;
+                } else {
                     if (*remLen != 0) {
                         --*remLen;
                         *dest++ = 'u';
@@ -172,6 +173,9 @@ static char* atoesc( char* dest, char const* src, int len, size_t* remLen  ) {
                 }
             }
         }
+
+        if (*remLen == 0)
+            break;
     }
     *dest = '\0';
     return dest;
