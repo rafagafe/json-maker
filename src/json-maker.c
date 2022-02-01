@@ -299,8 +299,10 @@ char* json_double( char* dest, char const* name, double value ) {
 
 #define json_num( funcname, type, fmt )                         \
 char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {    \
+    int digitLen;                                                   \
     dest = primitivename( dest, name, remLen );                         \
-    dest += snprintf( dest, *remLen, fmt, value );                        \
+    dest += digitLen = snprintf( dest, *remLen, fmt, value );                        \
+    *remLen -= digitLen                                                        \
     dest = chtoa( dest, ',', remLen );                                  \
     return dest;                                                \
 }
