@@ -301,8 +301,13 @@ char* json_double( char* dest, char const* name, double value ) {
 char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {    \
     int digitLen;                                                   \
     dest = primitivename( dest, name, remLen );                         \
-    dest += digitLen = snprintf( dest, *remLen, fmt, value );                        \
-    *remLen -= digitLen                                                        \
+    digitLen = snprintf( dest, *remLen, fmt, value );                         \
+    if(digitLen > 0 && digitLen < (int)*remLen){\
+    	*remLen -= (size_t)digitLen;                                                        \
+    	dest += digitLen;}\
+    else{\
+    	*remLen = 0;\
+    	return dest;}\
     dest = chtoa( dest, ',', remLen );                                  \
     return dest;                                                \
 }
