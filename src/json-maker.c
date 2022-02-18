@@ -305,6 +305,7 @@ char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {   
     if(digitLen >= (int)*remLen+1){                                                 \
     	digitLen = (int)*remLen;}                                                     \
     *remLen -= (size_t)digitLen;                                                    \
+    dest += digitLen;                                                               \
     dest = chtoa( dest, ',', remLen );                                              \
     return dest;                                                                    \
 }
