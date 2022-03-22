@@ -302,11 +302,16 @@ char* json_double( char* dest, char const* name, double value ) {
 
 
 #define json_num( funcname, type, fmt )                         \
-char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {    \
-    dest = primitivename( dest, name, remLen );                         \
-    dest += snprintf( dest, *remLen, fmt, value );                        \
-    dest = chtoa( dest, ',', remLen );                                  \
-    return dest;                                                \
+char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {       \
+    int digitLen;                                                                   \
+    dest = primitivename( dest, name, remLen );                                     \
+    digitLen = snprintf( dest, *remLen, fmt, value );                               \
+    if(digitLen >= (int)*remLen+1){                                                 \
+    	digitLen = (int)*remLen;}                                                     \
+    *remLen -= (size_t)digitLen;                                                    \
+    dest += digitLen;                                                               \
+    dest = chtoa( dest, ',', remLen );                                              \
+    return dest;                                                                    \
 }
 
 #define X( name, type, fmt ) json_num( name, type, fmt )
