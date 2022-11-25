@@ -284,6 +284,31 @@ static int real( void ) {
     done();
 }
 
+static int bounds(void) {
+    char buff[6];
+    char fillVal = 0x7c;
+    {
+        size_t remLen = sizeof(buff) - 1;
+        memset( buff, fillVal, sizeof( buff ) );
+        char* p = json_objOpen( buff, NULL, &remLen );
+        p = json_str( p, "0123456789", "value", &remLen );
+        p = json_objClose( p, &remLen );
+        p = json_end( p, &remLen );
+        // Check we didn't write past remLen bytes
+        check(buff[sizeof( buff ) - 1] == fillVal);
+    }
+    {
+        size_t remLen = sizeof( buff ) - 1;
+        memset( buff, fillVal, sizeof( buff ));
+        char* p = json_objOpen( buff, NULL, &remLen );
+        p = json_str( p, "v", "0123456789", &remLen );
+        p = json_objClose( p, &remLen );
+        p = json_end( p, &remLen );
+        // Check we didn't write past remLen bytes
+        check(buff[sizeof( buff ) - 1] == fillVal);
+    }
+    done();
+}
 // --------------------------------------------------------- Execute tests: ---
 
 int main( void ) {
@@ -294,7 +319,8 @@ int main( void ) {
         { primitive, "Primitives values"        },
         { integers,  "Integers values"          },
         { array,     "Array"                    },
-        { real,      "Real"                     }
+        { real,      "Real"                     },
+        { bounds,    "Bounds"                   },
     };
     return test_suit( tests, sizeof tests / sizeof *tests );
 }
