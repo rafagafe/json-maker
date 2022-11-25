@@ -48,7 +48,8 @@ static char* chtoa( char* dest, char ch, size_t* remLen ) {
 static char* atoa( char* dest, char const* src, size_t* remLen  ) {
     for( ; *src != '\0' && *remLen != 0; ++dest, ++src, --*remLen )
         *dest = *src;
-    *dest = '\0';
+    if (*remLen != 0)
+        *dest = '\0';
     return dest;
 }
 
@@ -177,7 +178,8 @@ static char* atoesc( char* dest, char const* src, int len, size_t* remLen  ) {
         if (*remLen == 0)
             break;
     }
-    *dest = '\0';
+    if (*remLen != 0)
+        *dest = '\0';
     return dest;
 }
 
