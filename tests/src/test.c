@@ -136,6 +136,11 @@ static int empty( void ) {
 #define LONG_LONG_MIN LLONG_MIN
 #endif
 
+#ifndef ULONG_LONG_MAX
+#define ULONG_LONG_MAX ULLONG_MAX
+#define ULONG_LONG_MIN 0
+#endif
+
 static int primitive( void ) {
     char buff[512];
     size_t remLen = sizeof(buff);
@@ -236,6 +241,19 @@ static int integers( void ) {
         p = json_end( p, &remLen );
         char rslt[ sizeof buff ];
         int len = sprintf( rslt, "{\"max\":%lld,\"min\":%lld}", LONG_LONG_MAX, LONG_LONG_MIN );
+        check( len < sizeof buff );
+        check( p - buff == len );
+        check( 0 == strcmp( buff, rslt ) );
+    }
+    {
+        char buff[64];
+        size_t remLen = sizeof(buff);
+        char* p = json_objOpen( buff, NULL, &remLen );
+        p = json_uverylong( p, "max", ULONG_LONG_MAX, &remLen );
+        p = json_objClose( p, &remLen );
+        p = json_end( p, &remLen );
+        char rslt[ sizeof buff ];
+        int len = sprintf( rslt, "{\"max\":%lld}", ULONG_LONG_MAX );
         check( len < sizeof buff );
         check( p - buff == len );
         check( 0 == strcmp( buff, rslt ) );
