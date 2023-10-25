@@ -32,11 +32,16 @@
   * @param remLen Pointer to remaining length of dest
   * @return Pointer to the null character of the destination string. */
 static char* chtoa( char* dest, char ch, size_t* remLen ) {
-    if (*remLen != 0) {
+    if (0 != *remLen) {
         --*remLen;
-        *dest   = ch;
-        *++dest = '\0';
+        *dest++   = ch;
     }
+    if (0 == *remLen)
+    {
+        ++*remLen;
+        --dest;
+    }
+    *dest = '\0';
     return dest;
 }
 
@@ -48,6 +53,11 @@ static char* chtoa( char* dest, char ch, size_t* remLen ) {
 static char* atoa( char* dest, char const* src, size_t* remLen  ) {
     for( ; *src != '\0' && *remLen != 0; ++dest, ++src, --*remLen )
         *dest = *src;
+    if (0 == *remLen)
+    {
+        ++*remLen;
+        --dest;
+    }
     *dest = '\0';
     return dest;
 }
@@ -222,6 +232,7 @@ char* json_end( char* dest, size_t* remLen ) {
     if ( ',' == dest[-1] ) {
         dest[-1] = '\0';
         --dest;
+        *dest = '\0';
         ++*remLen;
     }
     return dest;
@@ -229,9 +240,17 @@ char* json_end( char* dest, size_t* remLen ) {
 
 #ifdef NO_SPRINTF
 
-static char* format( char* dest, int len, int isnegative ) {
-    if ( isnegative )
+static char* format( char* dest, int len, int isnegative, size_t *remLen ) {
+    if ( isnegative && 0 != *remLen )
+    {
         dest[ len++ ] = '-';
+        --*remLen;
+    }
+    if (0 == *remLen)
+    {
+        --len;
+        ++*remLen;
+    }
     dest[ len ] = '\0';
     int head = 0;
     int tail = len - 1;
@@ -245,36 +264,38 @@ static char* format( char* dest, int len, int isnegative ) {
     return dest + len;
 }
 
-#define numtoa( func, type, utype )         \
-static char* func( char* dest, type val ) { \
-    enum { base = 10 };                     \
-    if ( 0 == val )                         \
-        return chtoa( dest, '0' );          \
-    int const isnegative = 0 > val;         \
-    utype num = isnegative ? -val : val;    \
-    int len = 0;                            \
-    while( 0 != num ) {                     \
-        int rem = num % base;               \
-        dest[ len++ ] = rem + '0';          \
-        num = num / base;                   \
-    }                                       \
-    return format( dest, len, isnegative ); \
-}                                           \
+#define numtoa( func, type, utype )                         \
+static char* func( char* dest, type val, size_t *remLen ) { \
+    enum { base = 10 };                                     \
+    if ( 0 == val )                                         \
+        return chtoa( dest, '0', remLen );                  \
+    int const isnegative = 0 > val;                         \
+    utype num = isnegative ? -val : val;                    \
+    int len = 0;                                            \
+    while( 0 != num && *remLen != 0 ) {                     \
+        int rem = num % base;                               \
+        dest[ len++ ] = rem + '0';                          \
+        --*remLen;                                          \
+        num = num / base;                                   \
+    }                                                       \
+    return format( dest, len, isnegative, remLen );         \
+}                                           
 
-#define json_num( func, func2, type )                       \
-char* func( char* dest, char const* name, type value ) {    \
-    dest = primitivename( dest, name );                     \
-    dest = func2( dest, value );                            \
-    dest = chtoa( dest, ',' );                              \
-    return dest;                                            \
-}                                                           \
+#define json_num( func, func2, type )                                       \
+char* func( char* dest, char const* name, type value, size_t *remLen ) {    \
+    dest = primitivename( dest, name, remLen );                             \
+    dest = func2( dest, value, remLen );                                    \
+    dest = chtoa( dest, ',', remLen );                                      \
+    return dest;                                                            \
+}                                                           
 
 #define ALL_TYPES \
-    X( int,      int,          unsigned int        ) \
-    X( long,     long,         unsigned long       ) \
-    X( uint,     unsigned int, unsigned int        ) \
-    X( ulong,    unsigned      long, unsigned long ) \
-    X( verylong, long long,    unsigned long long  ) \
+    X( int,       int,                unsigned int        ) \
+    X( long,      long,               unsigned long       ) \
+    X( uint,      unsigned int,       unsigned int        ) \
+    X( ulong,     unsigned long,      unsigned long       ) \
+    X( verylong,  long long,          unsigned long long  ) \
+    X( uverylong, unsigned long long, unsigned long long  )
 
 #define X( name, type, utype ) numtoa( name##toa, type, utype )
 ALL_TYPES
@@ -284,30 +305,31 @@ ALL_TYPES
 ALL_TYPES
 #undef X
 
-char* json_double( char* dest, char const* name, double value ) {
-    return json_verylong( dest, name, value );
+char* json_double( char* dest, char const* name, double value, size_t* remLen ) {
+    return json_verylong( dest, name, value, remLen );
 }
 
 #else
 
 #include <stdio.h>
 
-#define ALL_TYPES \
-    X( json_int,      int,           "%d"   ) \
-    X( json_long,     long,          "%ld"  ) \
-    X( json_uint,     unsigned int,  "%u"   ) \
-    X( json_ulong,    unsigned long, "%lu"  ) \
-    X( json_verylong, long long,     "%lld" ) \
-    X( json_double,   double,        "%g"   ) \
+#define ALL_TYPES                                   \
+    X( json_int,       int,                "%d"   ) \
+    X( json_long,      long,               "%ld"  ) \
+    X( json_uint,      unsigned int,       "%u"   ) \
+    X( json_ulong,     unsigned long,      "%lu"  ) \
+    X( json_verylong,  long long,          "%lld" ) \
+    X( json_uverylong, unsigned long long, "%llu" ) \
+    X( json_double,    double,             "%g"   )
 
 
-#define json_num( funcname, type, fmt )                         \
+#define json_num( funcname, type, fmt )                                             \
 char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {       \
     int digitLen;                                                                   \
     dest = primitivename( dest, name, remLen );                                     \
     digitLen = snprintf( dest, *remLen, fmt, value );                               \
     if(digitLen >= (int)*remLen+1){                                                 \
-    	digitLen = (int)*remLen;}                                                     \
+    	digitLen = (int)*remLen;}                                                   \
     *remLen -= (size_t)digitLen;                                                    \
     dest += digitLen;                                                               \
     dest = chtoa( dest, ',', remLen );                                              \
