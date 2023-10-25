@@ -290,11 +290,12 @@ char* func( char* dest, char const* name, type value, size_t *remLen ) {    \
 }                                                           
 
 #define ALL_TYPES \
-    X( int,      int,          unsigned int        ) \
-    X( long,     long,         unsigned long       ) \
-    X( uint,     unsigned int, unsigned int        ) \
-    X( ulong,    unsigned      long, unsigned long ) \
-    X( verylong, long long,    unsigned long long  ) \
+    X( int,       int,                unsigned int        ) \
+    X( long,      long,               unsigned long       ) \
+    X( uint,      unsigned int,       unsigned int        ) \
+    X( ulong,     unsigned long,      unsigned long       ) \
+    X( verylong,  long long,          unsigned long long  ) \
+    X( uverylong, unsigned long long, unsigned long long  )
 
 #define X( name, type, utype ) numtoa( name##toa, type, utype )
 ALL_TYPES
@@ -312,22 +313,23 @@ char* json_double( char* dest, char const* name, double value, size_t* remLen ) 
 
 #include <stdio.h>
 
-#define ALL_TYPES \
-    X( json_int,      int,           "%d"   ) \
-    X( json_long,     long,          "%ld"  ) \
-    X( json_uint,     unsigned int,  "%u"   ) \
-    X( json_ulong,    unsigned long, "%lu"  ) \
-    X( json_verylong, long long,     "%lld" ) \
-    X( json_double,   double,        "%g"   ) \
+#define ALL_TYPES                                   \
+    X( json_int,       int,                "%d"   ) \
+    X( json_long,      long,               "%ld"  ) \
+    X( json_uint,      unsigned int,       "%u"   ) \
+    X( json_ulong,     unsigned long,      "%lu"  ) \
+    X( json_verylong,  long long,          "%lld" ) \
+    X( json_uverylong, unsigned long long, "%llu" ) \
+    X( json_double,    double,             "%g"   )
 
 
-#define json_num( funcname, type, fmt )                         \
+#define json_num( funcname, type, fmt )                                             \
 char* funcname( char* dest, char const* name, type value, size_t* remLen  ) {       \
     int digitLen;                                                                   \
     dest = primitivename( dest, name, remLen );                                     \
     digitLen = snprintf( dest, *remLen, fmt, value );                               \
     if(digitLen >= (int)*remLen+1){                                                 \
-    	digitLen = (int)*remLen;}                                                     \
+    	digitLen = (int)*remLen;}                                                   \
     *remLen -= (size_t)digitLen;                                                    \
     dest += digitLen;                                                               \
     dest = chtoa( dest, ',', remLen );                                              \

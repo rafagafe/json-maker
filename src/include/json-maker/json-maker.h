@@ -142,6 +142,14 @@ char* json_ulong( char* dest, char const* name, unsigned long int value, size_t*
   * @return Pointer to the new end of JSON under construction. */
 char* json_verylong( char* dest, char const* name, long long int value, size_t* remLen );
 
+/** Add a unsigned long long integer property in a JSON string.
+  * @param dest Pointer to the end of JSON under construction.
+  * @param name Pointer to null-terminated string or null for unnamed.
+  * @param value Value of the property.
+  * @param remLen Pointer to remaining length of dest
+  * @return Pointer to the new end of JSON under construction. */
+char* json_uverylong( char* dest, char const* name, unsigned long long int value, size_t* remLen );
+
 /** Add a double precision number property in a JSON string.
   * @param dest Pointer to the end of JSON under construction.
   * @param name Pointer to null-terminated string or null for unnamed.
